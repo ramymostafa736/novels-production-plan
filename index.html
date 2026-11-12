@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selaheltelmeez Novels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* One visual world: dark violet glass. Sidebar | main (hero, tiles, chart, tables) | right rail of info cards. */
+:root {
+  --bg: #0a0918;
+  --ink: #eeebff;
+  --muted: #a39fc6;
+  --faint: #6f6a96;
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-2: rgba(255, 255, 255, 0.075);
+  --stroke: rgba(255, 255, 255, 0.10);
+  --violet: #8f7cff;
+  --violet-2: #c4b5fd;
+  --violet-glow: rgba(143, 124, 255, 0.45);
+  --good: #5fe3a8;
+  --warn: #ffc16b;
+  --bad: #ff7d90;
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 14px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; min-height: 100%;
+  background-image:
+    radial-gradient(900px 500px at 50% -10%, rgba(120, 92, 255, 0.28), transparent 60%),
+    radial-gradient(600px 400px at 100% 30%, rgba(160, 90, 255, 0.16), transparent 60%),
+    radial-gradient(700px 500px at 0% 90%, rgba(90, 70, 220, 0.16), transparent 60%);
+  background-attachment: fixed;
+}
+a { color: inherit; text-decoration: none; }
+.glass { background: var(--glass); border: 1px solid var(--stroke); border-radius: 18px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 50px rgba(0,0,0,0.25); }
+.shell { display: grid; grid-template-columns: 236px minmax(0, 1fr) 300px; gap: 18px; padding: 18px; max-width: 1480px; margin: 0 auto; align-items: start; }
+
+/* Sidebar */
+.side { position: sticky; top: 18px; padding: 18px 14px; display: flex; flex-direction: column; gap: 18px; min-height: calc(100vh - 36px); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px; font-weight: 600; font-size: 16px; }
+.brand .mark { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: linear-gradient(140deg, #a996ff, #6b4dff); box-shadow: 0 0 18px var(--violet-glow); }
+.nav { display: flex; flex-direction: column; gap: 4px; }
+.nav a { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 12px; color: var(--muted); font-weight: 500; border: 1px solid transparent; }
+.nav a:hover { background: var(--glass-2); color: var(--ink); }
+.nav a.on { color: var(--ink); background: linear-gradient(90deg, rgba(143,124,255,0.28), rgba(143,124,255,0.08)); border-color: rgba(143,124,255,0.35); box-shadow: 0 0 22px rgba(143,124,255,0.25); }
+.nav svg, .ico { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.side h4 { margin: 0; padding: 0 12px; font-size: 12px; font-weight: 500; color: var(--muted); display: flex; justify-content: space-between; }
+.feed { display: flex; flex-direction: column; gap: 10px; padding: 0 12px; }
+.feed div { font-size: 13px; }
+.feed small { display: block; color: var(--faint); font-size: 11px; }
+.side .spacer { flex: 1; }
+.side .btn { display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; border-radius: 14px; background: var(--glass-2); border: 1px solid var(--stroke); font-weight: 500; font-size: 13px; }
+
+/* Main */
+.main { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.topbar { display: flex; align-items: center; gap: 12px; }
+.search { flex: 1; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; color: var(--muted); font-size: 13px; }
+.search kbd { margin-left: auto; font-family: var(--font); font-size: 11px; color: var(--faint); border: 1px solid var(--stroke); border-radius: 6px; padding: 1px 6px; }
+.pill-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; font-size: 13px; font-weight: 500; white-space: nowrap; }
+.pill-btn.state { color: var(--good); }
+.pill-btn.state.bad { color: var(--bad); }
+.avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 13px; background: linear-gradient(140deg, #3a2f7a, #1c1840); border: 1px solid var(--stroke); }
+
+.hero { text-align: center; padding: 34px 8px 6px; }
+.hero h1 { font-size: 40px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.hero p { margin: 12px auto 0; max-width: 60ch; color: var(--muted); font-size: 16px; }
+.hero p b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.composer { padding: 18px 20px 16px; }
+.composer .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.composer .big { font-size: 15px; color: var(--muted); }
+.composer .big b { color: var(--ink); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.composer .pct { font-size: 13px; color: var(--violet-2); font-weight: 600; }
+.track { position: relative; height: 12px; border-radius: 999px; background: rgba(255,255,255,0.07); margin: 14px 0 8px; overflow: visible; }
+.track .fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, #6b4dff, #b8a6ff); box-shadow: 0 0 18px var(--violet-glow); }
+.track .tick { position: absolute; top: -3px; bottom: -3px; width: 2px; background: rgba(255,255,255,0.22); border-radius: 2px; }
+.track .today { position: absolute; top: -8px; bottom: -8px; width: 2px; background: var(--warn); box-shadow: 0 0 10px rgba(255,193,107,0.7); }
+.ticks { position: relative; height: 18px; font-size: 11px; color: var(--faint); }
+.ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 12px; font-size: 13px; font-weight: 500; background: var(--glass); border: 1px solid var(--stroke); }
+.chip .ico { width: 16px; height: 16px; color: var(--violet-2); }
+
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.tile { padding: 16px; min-height: 164px; display: flex; flex-direction: column; }
+.tile .t { font-size: 15px; font-weight: 600; line-height: 1.25; }
+.tile .v { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.tile .v small { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 4px; letter-spacing: 0; }
+.tile .s { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.tile .ico { margin-top: auto; padding-top: 10px; width: 30px; height: 30px; color: var(--violet-2); }
+
+.card { padding: 20px; }
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; margin-bottom: 14px; }
+h2 { font-size: 16px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+.hint { font-size: 12px; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.sw { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
+
+.strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.seg { padding: 12px; border-radius: 14px; background: var(--glass); border: 1px solid var(--stroke); position: relative; }
+.seg.now { border-color: rgba(143,124,255,0.6); box-shadow: 0 0 24px rgba(143,124,255,0.28); background: rgba(143,124,255,0.10); }
+.seg .wk { display: flex; flex-direction: column; font-size: 13px; font-weight: 600; gap: 0; }
+.seg .wk span { font-weight: 400; color: var(--muted); font-size: 12px; }
+.seg .bar { height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); margin: 10px 0 6px; overflow: hidden; }
+.seg .bar i { display: block; height: 100%; background: linear-gradient(90deg, #6b4dff, #b8a6ff); }
+.seg .meta { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.seg .tag { position: absolute; top: -9px; right: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 1px 8px; border-radius: 999px; background: linear-gradient(90deg, #6b4dff, #9d87ff); }
+
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tip { position: absolute; pointer-events: none; background: rgba(22, 19, 48, 0.95); border: 1px solid var(--stroke); box-shadow: 0 12px 30px rgba(0,0,0,0.4); border-radius: 10px; padding: 8px 10px; font-size: 12px; color: var(--muted); white-space: nowrap; opacity: 0; transform: translateX(-50%); transition: opacity 0.12s; z-index: 3; }
+.tip b { display: block; color: var(--ink); margin-bottom: 2px; }
+
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid rgba(255,255,255,0.07); vertical-align: middle; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.next td { background: rgba(143,124,255,0.10); }
+.mini { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.mini .b { flex: 1; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.mini .b i { display: block; height: 100%; background: linear-gradient(90deg, #6b4dff, #b8a6ff); }
+.mini span { font-size: 12px; color: var(--muted); width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; white-space: nowrap; color: var(--muted); background: rgba(255,255,255,0.06); border: 1px solid var(--stroke); }
+.pill.ok { color: var(--good); background: rgba(95,227,168,0.10); border-color: rgba(95,227,168,0.25); }
+.pill.warn { color: var(--warn); background: rgba(255,193,107,0.10); border-color: rgba(255,193,107,0.25); }
+.pill.late { color: var(--bad); background: rgba(255,125,144,0.10); border-color: rgba(255,125,144,0.28); }
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; color: var(--muted); }
+.steps li b { color: var(--ink); font-weight: 600; }
+.steps li::before { counter-increment: s; content: counter(s); width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; font-weight: 600; font-size: 12px; color: var(--ink); background: rgba(143,124,255,0.22); border: 1px solid rgba(143,124,255,0.4); }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+.checks li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; color: var(--muted); }
+.checks li::before { content: ""; width: 14px; height: 14px; margin-top: 3px; border-radius: 4px; border: 1.5px solid var(--violet); }
+.note { font-size: 12px; color: var(--faint); margin: 12px 0 0; }
+
+/* Right rail */
+.rail { display: flex; flex-direction: column; gap: 18px; position: sticky; top: 18px; }
+.orb-card { padding: 18px; overflow: hidden; position: relative; min-height: 220px; }
+.orb-card h3, .rail h3 { margin: 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.orb-card h3 .spark { color: var(--violet-2); }
+.orb-card p { margin: 6px 0 0; font-size: 12px; color: var(--muted); max-width: 18ch; }
+.ring { position: absolute; right: 14px; bottom: 14px; width: 150px; height: 150px; filter: drop-shadow(0 0 24px rgba(143,124,255,0.55)); }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+.ring .c b { display: block; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+.ring .c span { font-size: 11px; color: var(--muted); }
+.orb { position: absolute; left: -30px; bottom: -40px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.7), rgba(176,150,255,0.5) 25%, rgba(90,60,220,0.15) 60%, transparent 70%); filter: blur(2px); opacity: 0.55; }
+.rail .card { padding: 16px 18px; }
+.rail ul { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.rail li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+.rail li .ico { width: 16px; height: 16px; color: var(--muted); }
+.rail li .ok { margin-left: auto; color: var(--good); width: 16px; height: 16px; }
+.kv { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-top: 8px; }
+.kv b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.spark-svg { display: block; width: 100%; height: 56px; margin-top: 10px; }
+.final { display: flex; align-items: center; gap: 12px; }
+.final .badge { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(140deg, #a996ff, #6b4dff); box-shadow: 0 0 18px var(--violet-glow); flex: none; }
+.final b { display: block; font-size: 14px; }
+.final span { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 1240px) {
+  .shell { grid-template-columns: 220px minmax(0, 1fr); }
+  .rail { grid-column: 2; position: static; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+}
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; padding: 12px; }
+  .side { position: static; min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 10px; gap: 10px; }
+  .side .nav { flex-direction: row; flex-wrap: wrap; }
+  .side h4, .feed, .side .spacer, .side .btn { display: none; }
+  .rail { grid-column: auto; }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hero h1 { font-size: 32px; }
+  .search kbd { display: none; }
+}
+@media (max-width: 460px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } .topbar .avatar { display: none; } }
+@media (prefers-reduced-motion: no-preference) { .track .fill, .seg .bar i, .mini .b i { transition: width 0.8s ease-out; } }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="side glass" aria-label="Sections">
+    <div class="brand"><span class="mark"><svg class="ico" viewBox="0 0 24 24" style="color:#fff"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5A2.5 2.5 0 0 1 4 20.5Z"/></svg></span>Selaheltelmeez</div>
+    <nav class="nav">
+      <a href="#overview" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z"/></svg>Overview</a>
+      <a href="#timeline"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Timeline</a>
+      <a href="#progress"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg>Progress</a>
+      <a href="#batches"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Batches</a>
+      <a href="#scope"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>Scope</a>
+      <a href="#workflow"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg>Workflow</a>
+      <a href="#risks"><svg viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19L12 3Z"/><path d="M12 10v4M12 17.5v.01"/></svg>Risks</a>
+    </nav>
+    <h4>Milestones <span>✦</span></h4>
+    <div class="feed" id="feed"></div>
+    <div class="spacer"></div>
+    <a class="btn" href="#batches">View all batches <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="search glass"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Rework delivery plan · EPUB + MP3 · 30 series<kbd id="upd">—</kbd></div>
+      <span class="pill-btn glass state" id="state">—</span>
+      <span class="avatar" aria-hidden="true">SN</span>
+    </div>
+
+    <section class="hero" id="overview">
+      <h1>Selaheltelmeez Novels</h1>
+      <p id="takeaway"></p>
+    </section>
+
+    <section class="composer glass" aria-label="Overall progress">
+      <div class="row"><div class="big"><b id="c-del">—</b> of <span id="c-total">—</span> novels delivered</div><div class="pct" id="c-pct">—</div></div>
+      <div class="track" id="c-track"><div class="fill" id="c-fill" style="width:0"></div></div>
+      <div class="ticks" id="c-ticks"></div>
+    </section>
+
+    <div class="chips">
+      <span class="chip"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="chip-start">—</span></span>
+      <span class="chip"><svg class="ico" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/></svg>30 series</span>
+      <span class="chip"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/></svg>6 weeks × 5 working days</span>
+      <span class="chip"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg>Delivery every Thursday</span>
+    </div>
+
+    <section class="tiles" aria-label="Key figures">
+      <div class="tile glass"><div class="t">Delivered</div><div class="v" id="k-del">—</div><div class="s" id="k-del-s">—</div><svg class="ico" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></div>
+      <div class="tile glass"><div class="t">Remaining</div><div class="v" id="k-rem">—</div><div class="s">novels to go</div><svg class="ico" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg></div>
+      <div class="tile glass"><div class="t">Next batch</div><div class="v" id="k-next">—</div><div class="s" id="k-next-s">—</div><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div>
+      <div class="tile glass"><div class="t">Pace needed</div><div class="v" id="k-pace">—</div><div class="s" id="k-pace-s">—</div><svg class="ico" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8Z"/></svg></div>
+    </section>
+
+    <section class="card glass" id="timeline">
+      <div class="head"><h2>Six-week timeline</h2><span class="hint">Each bar fills as that week’s novels are delivered</span></div>
+      <div class="strip" id="strip"></div>
+    </section>
+
+    <section class="card glass" id="progress">
+      <div class="head">
+        <h2>Cumulative novels: planned vs delivered</h2>
+        <div class="legend"><span><i class="sw" style="background:#5d5790"></i>Planned</span><span><i class="sw" style="background:var(--violet-2)"></i>Delivered</span><span><i class="sw" style="background:var(--warn)"></i>Today</span></div>
+      </div>
+      <div class="chart" id="chart"></div>
+    </section>
+
+    <section class="card glass" id="batches">
+      <div class="head"><h2>Batch schedule</h2><span class="hint">Highlighted row = next batch due</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Batch</th><th>Working days</th><th>Delivery</th><th class="num">Planned</th><th class="num">Delivered</th><th>Progress</th><th class="num">Cumulative</th><th>Status</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card glass" id="scope">
+      <div class="head"><h2>Scope and acceptance criteria per novel</h2><span class="hint">Same spec as the approved “Legend of El Nadaha” sample</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>File</th><th>Change</th><th>Accepted when</th></tr></thead>
+          <tbody>
+            <tr><td><b>EPUB</b> · cover</td><td>Replace the old cover with the new one</td><td>The new cover shows in the reader and the library</td></tr>
+            <tr><td><b>EPUB</b> · page 2</td><td>Remove “Egyptian Novels”, “All Rights Reserved”, and the printer’s addresses and phone numbers</td><td>Only the logo, series name, “Egyptian Work”, the “Supervised by” line and the stamp remain</td></tr>
+            <tr><td><b>EPUB</b> · hidden image</td><td>Remove the hidden “Egyptian Novels” picture</td><td>The picture is in no file inside the EPUB</td></tr>
+            <tr><td><b>EPUB</b> · text</td><td>No change</td><td>Text matches the original 100%</td></tr>
+            <tr><td><b>EPUB</b> · package</td><td>Repackage</td><td>Opens without errors and passes EPUBCheck</td></tr>
+            <tr><td><b>MP3</b></td><td>Remove “You are listening to Egyptian Novels”</td><td>Phrase gone; rest of the recording and quality unchanged</td></tr>
+            <tr><td><b>File names</b></td><td>Name by ISBN</td><td>EPUB, MP3 and JPG cover share the novel’s ISBN</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Designing the new covers (Cover and Thumbnail) is outside this plan; they are supplied ready.</p>
+    </section>
+
+    <div class="grid2">
+      <section class="card glass" id="workflow">
+        <div class="head"><h2>Workflow per novel</h2></div>
+        <ol class="steps">
+          <li><span><b>Intake.</b> Match the EPUB, MP3 and new cover to the ISBN list.</span></li>
+          <li><span><b>EPUB edits.</b> Cover, page 2, hidden image.</span></li>
+          <li><span><b>Audio edit.</b> Remove the phrase and export at the same quality.</span></li>
+          <li><span><b>Automated checks</b> on every file: text match, EPUBCheck, audio duration.</span></li>
+          <li><span><b>Manual review.</b> Cover, page 2, start and end of every audio file; the first novel of each series in full.</span></li>
+          <li><span><b>Packaging.</b> One folder per series, a delivery sheet and a weekly progress report.</span></li>
+        </ol>
+      </section>
+      <section class="card glass" id="needs">
+        <div class="head"><h2>Needed from management by 14 Nov</h2></div>
+        <ul class="checks">
+          <li><span>Master list of the 30 series and 717 novels with ISBNs</span></li>
+          <li><span>All source files (EPUB + MP3) in one place</span></li>
+          <li><span>New covers, or each batch’s covers one week ahead</span></li>
+          <li><span>Sign-off on the 5 delivered novels as the final spec</span></li>
+          <li><span>One reviewer, and the delivery location (Drive or server)</span></li>
+        </ul>
+        <p class="note">A batch counts as approved if no feedback arrives within 2 working days.</p>
+      </section>
+    </div>
+
+    <section class="card glass" id="risks">
+      <div class="head"><h2>Risks and mitigation</h2></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Risk</th><th>Impact</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Steady pace of about 24 novels a day, no buffer day at the end</td><td>One lost day delays about 24 novels</td><td>Automated edits run alongside review; any slip is recovered within the same week</td></tr>
+            <tr><td>Missing files, or missing or duplicate ISBNs</td><td>Specific novels slip</td><td>Daily exceptions list; the novel moves to the next batch</td></tr>
+            <tr><td>Page 2 or the hidden image differs by series</td><td>Wrong automated edit</td><td>First novel of each series reviewed in full before the rest run</td></tr>
+            <tr><td>Audio phrase in a different spot, or a novel split into several MP3s</td><td>Phrase left in some files</td><td>Check the start and end of every audio file</td></tr>
+            <tr><td>New covers arrive late</td><td>A whole series slips</td><td>Reorder batches around the series that are ready</td></tr>
+            <tr><td>Late feedback from management</td><td>Fixes pile up</td><td>Batch approved automatically after 2 working days</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <aside class="rail" aria-label="Summary">
+    <section class="orb-card glass">
+      <div class="orb"></div>
+      <h3>Overall progress <span class="spark">✦</span></h3>
+      <p>Share of all 717 novels delivered to date.</p>
+      <div class="ring">
+        <svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6b4dff"/></linearGradient></defs><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/><circle id="ring-arc" cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 315"/></svg>
+        <div class="c"><div><b id="ring-pct">—</b><span>delivered</span></div></div>
+      </div>
+    </section>
+
+    <section class="card glass">
+      <h3>Per-novel checklist</h3>
+      <ul>
+        <li><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8"/></svg>New cover in EPUB<svg class="ico ok" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></li>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/></svg>Page 2 cleaned<svg class="ico ok" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></li>
+        <li><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Hidden image removed<svg class="ico ok" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></li>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Text unchanged<svg class="ico ok" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></li>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>Audio intro removed<svg class="ico ok" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></li>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg>Files named by ISBN<svg class="ico ok" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></li>
+      </ul>
+    </section>
+
+    <section class="card glass">
+      <h3>Project numbers</h3>
+      <div class="kv"><span>Total novels</span><b id="r-total">—</b></div>
+      <div class="kv"><span>Planned by today</span><b id="r-plan">—</b></div>
+      <div class="kv"><span>Working days left</span><b id="r-days">—</b></div>
+      <svg class="spark-svg" id="spark" viewBox="0 0 260 56" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </section>
+
+    <section class="card glass">
+      <div class="final"><span class="badge"><svg class="ico" viewBox="0 0 24 24" style="color:#fff"><path d="M12 3l2.6 5.6L20 9.3l-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.4-.7L12 3Z"/></svg></span><div><b id="r-final">—</b><span id="r-final-s">—</span></div></div>
+    </section>
+  </aside>
+</div>
+
+<script>
+/* ===== LIVE DATA SOURCE =====
+   Paste the Google Sheet "Publish to web" CSV link here. The page reads it every time it opens,
+   so editing the sheet updates the page. Leave empty to use the backup data below. */
+const SHEET_CSV_URL = "";
+
+/* ===== PROGRESS DATA — update `delivered` and `status` each week, and LAST_UPDATED =====
+   status: "Not started" | "In progress" | "Delivered" | "Approved" */
+const LAST_UPDATED = "2026-11-11";
+const BATCHES = [
+  { batch: 0, label: "Approved sample", start: null,         end: null,         delivery: null,         planned: 5,   delivered: 5, status: "Approved" },
+  { batch: 1, label: "Week 1",          start: "2026-11-15", end: "2026-11-19", delivery: "2026-11-19", planned: 119, delivered: 0, status: "Not started" },
+  { batch: 2, label: "Week 2",          start: "2026-11-22", end: "2026-11-26", delivery: "2026-11-26", planned: 119, delivered: 0, status: "Not started" },
+  { batch: 3, label: "Week 3",          start: "2026-11-29", end: "2026-12-03", delivery: "2026-12-03", planned: 119, delivered: 0, status: "Not started" },
+  { batch: 4, label: "Week 4",          start: "2026-12-06", end: "2026-12-10", delivery: "2026-12-10", planned: 119, delivered: 0, status: "Not started" },
+  { batch: 5, label: "Week 5",          start: "2026-12-13", end: "2026-12-17", delivery: "2026-12-17", planned: 118, delivered: 0, status: "Not started" },
+  { batch: 6, label: "Week 6",          start: "2026-12-20", end: "2026-12-24", delivery: "2026-12-24", planned: 118, delivered: 0, status: "Not started" }
+];
+/* ===== end of data ===== */
+
+function render(BATCHES, LAST_UPDATED, LIVE) {
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAY = 864e5;
+const t = (s) => Date.parse(s + "T00:00:00Z");
+const dd = (s) => s ? `${Number(s.slice(8, 10))} ${MON[Number(s.slice(5, 7)) - 1]}` : "";
+const dow = (s) => DOW[new Date(t(s)).getUTCDay()];
+const fmt = (n) => Math.round(n).toLocaleString("en-US");
+const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+const todayIso = new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Cairo", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const today = t(todayIso);
+
+const weeks = BATCHES.filter((b) => b.batch > 0);
+const sample = BATCHES.find((b) => b.batch === 0) || { planned: 0, delivered: 0 };
+const total = BATCHES.reduce((a, b) => a + b.planned, 0);
+const delivered = BATCHES.reduce((a, b) => a + b.delivered, 0);
+const remaining = total - delivered;
+const pct = total ? delivered / total : 0;
+const next = weeks.find((b) => b.delivered < b.planned);
+const startIso = weeks[0].start, finalIso = weeks[weeks.length - 1].delivery;
+const workDays = [];
+for (let d = t(startIso); d <= t(finalIso); d += DAY) { if (new Date(d).getUTCDay() <= 4) workDays.push(d); }
+const daysLeft = workDays.filter((d) => d >= today).length;
+const plannedByToday = sample.planned + weeks.filter((b) => t(b.delivery) < today).reduce((a, b) => a + b.planned, 0);
+const gap = delivered - plannedByToday;
+let run = 0;
+const rows = BATCHES.map((b) => { run += b.planned; return { ...b, cum: run }; });
+
+// Top bar + hero
+set("upd", LIVE ? `Live · synced ${new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Africa/Cairo" })}` : `Updated ${dd(LAST_UPDATED)}`);
+const st = document.getElementById("state");
+if (today < t(startIso)) st.textContent = `● Starts in ${plural(Math.round((t(startIso) - today) / DAY), "day")}`;
+else if (remaining === 0) st.textContent = "● Complete";
+else { st.textContent = gap >= 0 ? (gap === 0 ? "● On plan" : `● ${fmt(gap)} ahead`) : `● ${fmt(-gap)} behind plan`; if (gap < 0) st.classList.add("bad"); }
+const take = document.getElementById("takeaway");
+const B = (s) => mk("b", "", s);
+take.append(B(fmt(delivered)), " of ", B(fmt(total)), " novels delivered. ");
+if (next) take.append("Next batch: ", B(fmt(next.planned - next.delivered)), ` novels due ${dow(next.delivery)} `, B(dd(next.delivery)), ".");
+else take.append("All batches delivered.");
+
+// Composer-style progress bar with weekly ticks and today marker
+set("c-del", fmt(delivered)); set("c-total", fmt(total)); set("c-pct", `${(pct * 100).toFixed(1)}%`);
+const track = document.getElementById("c-track"), ticks = document.getElementById("c-ticks");
+const span0 = t(startIso), span1 = t(finalIso);
+let acc = sample.planned;
+weeks.forEach((w) => {
+  acc += w.planned; const p = acc / total * 100;
+  const tk = mk("div", "tick"); tk.style.left = `${p}%`; track.append(tk);
+  const lb = mk("span", "", w.label.replace("Week ", "W")); lb.style.left = `${Math.min(p, 97)}%`; ticks.append(lb);
+});
+requestAnimationFrame(() => { document.getElementById("c-fill").style.width = `${pct > 0 ? Math.max(pct * 100, 1) : 0}%`; });
+if (plannedByToday > sample.planned && today <= span1 + DAY) { const td = mk("div", "today"); td.style.left = `${plannedByToday / total * 100}%`; td.title = "Planned by today"; track.append(td); }
+
+set("chip-start", today < t(startIso) ? `Starts Sun ${dd(startIso)}` : `Started ${dd(startIso)}`);
+
+// Tiles
+set("k-del", fmt(delivered)); set("k-del-s", `${(pct * 100).toFixed(1)}% of ${fmt(total)}`);
+set("k-rem", fmt(remaining));
+if (next) {
+  set("k-next", fmt(next.planned - next.delivered));
+  const n = Math.round((t(next.delivery) - today) / DAY);
+  set("k-next-s", `${next.label} · ${dow(next.delivery)} ${dd(next.delivery)}` + (n > 0 ? ` · in ${plural(n, "day")}` : n === 0 ? " · today" : ` · ${plural(-n, "day")} late`));
+} else { set("k-next", "—"); set("k-next-s", "All batches delivered"); }
+const pv = document.getElementById("k-pace");
+pv.textContent = remaining === 0 || daysLeft === 0 ? "0" : fmt(Math.ceil(remaining / daysLeft));
+pv.append(mk("small", "", "/ day"));
+set("k-pace-s", remaining === 0 ? "Plan complete" : `over ${plural(daysLeft, "working day")} left · plan ~24`);
+
+// Sidebar milestones
+const feed = document.getElementById("feed");
+const ms = [["Sample approved", "5 novels · same spec as El Nadaha"], [`Week 1 starts`, `Sun ${dd(startIso)}`], [`Next delivery`, next ? `${dow(next.delivery)} ${dd(next.delivery)} · ${next.label}` : "All delivered"], ["Final delivery", `Thu ${dd(finalIso)}`]];
+ms.forEach(([a, b]) => { const d = mk("div", "", a); d.append(mk("small", "", b)); feed.append(d); });
+
+// Timeline strip
+const strip = document.getElementById("strip");
+weeks.forEach((w) => {
+  const seg = mk("div", "seg");
+  const isNow = today >= t(w.start) && today <= t(w.end) + DAY * 2;
+  if (isNow || (next && w.batch === next.batch && today < t(startIso))) seg.classList.add("now");
+  if (isNow) seg.append(mk("div", "tag", "This week"));
+  const wk = mk("div", "wk", w.label); wk.append(mk("span", "", `Thu ${dd(w.delivery)}`));
+  const bar = mk("div", "bar"); const fill = mk("i"); fill.style.width = "0"; bar.append(fill);
+  requestAnimationFrame(() => { fill.style.width = `${Math.min(100, w.delivered / w.planned * 100)}%`; });
+  seg.append(wk, bar, mk("div", "meta", `${fmt(w.delivered)} / ${fmt(w.planned)} delivered`));
+  strip.append(seg);
+});
+
+// Table
+const tbody = document.getElementById("rows");
+const pillClass = (r) => {
+  if (r.status === "Approved" || r.status === "Delivered") return "ok";
+  if (r.delivery && t(r.delivery) < today && r.delivered < r.planned) return "late";
+  return r.status === "In progress" ? "warn" : "";
+};
+rows.forEach((r) => {
+  const tr = mk("tr"); if (next && r.batch === next.batch) tr.className = "next";
+  const add = (text, cls) => { const td = mk("td", cls || "", text); tr.append(td); return td; };
+  add().append(mk("b", "", r.label));
+  add(r.start ? `${dd(r.start)} – ${dd(r.end)}` : "Before the plan");
+  add(r.delivery ? `${dow(r.delivery)} ${dd(r.delivery)}` : "Done");
+  add(fmt(r.planned), "num"); add(fmt(r.delivered), "num");
+  const p = r.planned ? r.delivered / r.planned : 0;
+  const mini = mk("div", "mini"); const b = mk("div", "b"); const f = mk("i"); f.style.width = `${Math.min(100, p * 100)}%`; b.append(f);
+  mini.append(b, mk("span", "", `${Math.round(p * 100)}%`)); add().append(mini);
+  add(fmt(r.cum), "num");
+  const cls = pillClass(r); add().append(mk("span", "pill " + cls, cls === "late" ? "Late" : r.status));
+  tbody.append(tr);
+});
+
+// Right rail
+set("ring-pct", `${(pct * 100).toFixed(pct > 0 && pct < 0.1 ? 1 : 0)}%`);
+const C = 2 * Math.PI * 50;
+document.getElementById("ring-arc").setAttribute("stroke-dasharray", `${pct > 0 ? Math.max(3, C * pct) : 0} ${C}`);
+set("r-total", fmt(total)); set("r-plan", fmt(plannedByToday)); set("r-days", `${daysLeft} of ${workDays.length}`);
+set("r-final", `Final delivery · Thu ${dd(finalIso)}`);
+const fdays = Math.round((t(finalIso) - today) / DAY);
+set("r-final-s", fdays > 0 ? `${plural(fdays, "day")} away · all 717 novels` : fdays === 0 ? "Today" : "Date passed");
+// sparkline: cumulative planned (filled) + delivered (line)
+const NS = "http://www.w3.org/2000/svg";
+const S = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+(() => {
+  const sp = document.getElementById("spark"); const W = 260, H = 56;
+  const xs = (i) => i / weeks.length * W, ys = (v) => H - 4 - v / total * (H - 8);
+  let c = sample.planned, d = `M0,${ys(c)}`, cd = sample.delivered, dl = `M0,${ys(cd)}`;
+  weeks.forEach((w, i) => { c += w.planned; d += ` L${xs(i + 1)},${ys(c)}`; if (w.delivered > 0) { cd += w.delivered; dl += ` L${xs(i + 1)},${ys(cd)}`; } });
+  const g = S("linearGradient", { id: "sg", x1: 0, y1: 0, x2: 0, y2: 1 });
+  g.append(S("stop", { offset: 0, "stop-color": "#8f7cff", "stop-opacity": 0.45 }), S("stop", { offset: 1, "stop-color": "#8f7cff", "stop-opacity": 0 }));
+  const defs = S("defs", {}); defs.append(g); sp.append(defs);
+  sp.append(S("path", { d: `${d} L${W},${H} L0,${H} Z`, fill: "url(#sg)" }));
+  sp.append(S("path", { d, fill: "none", stroke: "#8f7cff", "stroke-width": 1.5 }));
+  sp.append(S("path", { d: dl, fill: "none", stroke: "#e5dcff", "stroke-width": 2 }));
+})();
+
+// Cumulative chart
+const chartEl = document.getElementById("chart");
+const FONT = "Inter, Segoe UI, system-ui, Arial, sans-serif";
+const T = (attrs, text) => { const e = S("text", { "font-family": FONT, ...attrs }); e.textContent = text; return e; };
+function drawChart() {
+  chartEl.textContent = "";
+  const W = Math.max(chartEl.clientWidth || 700, 300), narrow = W < 540;
+  const H = narrow ? 260 : 300, m = { t: 18, r: narrow ? 30 : 44, b: 46, l: 40 };
+  const x0 = t(startIso), x1 = t(finalIso) + DAY;
+  const X = (d) => m.l + (d - x0) / (x1 - x0) * (W - m.l - m.r);
+  const Y = (v) => H - m.b - (v / (total * 1.06)) * (H - m.t - m.b);
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `Cumulative novels planned and delivered; ${fmt(delivered)} of ${fmt(total)} delivered` });
+  const defs = S("defs", {});
+  const gp = S("linearGradient", { id: "gp", x1: 0, y1: 0, x2: 0, y2: 1 });
+  gp.append(S("stop", { offset: 0, "stop-color": "#8f7cff", "stop-opacity": 0.28 }), S("stop", { offset: 1, "stop-color": "#8f7cff", "stop-opacity": 0.02 }));
+  const glow = S("filter", { id: "glow", x: "-20%", y: "-20%", width: "140%", height: "140%" });
+  glow.append(S("feGaussianBlur", { stdDeviation: 3, result: "b" }));
+  const mg = S("feMerge", {}); mg.append(S("feMergeNode", { in: "b" }), S("feMergeNode", { in: "SourceGraphic" })); glow.append(mg);
+  defs.append(gp, glow); svg.append(defs);
+  [0, 200, 400, 600].forEach((v) => {
+    svg.append(S("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: "rgba(255,255,255,0.07)" }));
+    svg.append(T({ x: m.l - 8, y: Y(v) + 4, "text-anchor": "end", "font-size": 11, fill: "#6f6a96" }, fmt(v)));
+  });
+  svg.append(S("line", { x1: m.l, x2: W - m.r, y1: Y(total), y2: Y(total), stroke: "rgba(196,181,253,0.45)", "stroke-dasharray": "4 5" }));
+  svg.append(T({ x: m.l + 4, y: Y(total) - 7, "font-size": 11, fill: "#a39fc6" }, `Target ${fmt(total)}`));
+  let cum = sample.planned, pathP = `M${X(x0)},${Y(cum)}`; const pts = [];
+  weeks.forEach((w) => { const xd = X(t(w.delivery)); pathP += ` H${xd}`; cum += w.planned; pathP += ` V${Y(cum)}`; pts.push({ w, x: xd, y: Y(cum), cum }); });
+  pathP += ` H${X(x1)}`;
+  svg.append(S("path", { d: `${pathP} V${Y(0)} H${X(x0)} Z`, fill: "url(#gp)" }));
+  svg.append(S("path", { d: pathP, fill: "none", stroke: "#5d5790", "stroke-width": 2 }));
+  let cd = sample.delivered, pathD = `M${X(x0)},${Y(cd)}`, lastX = X(x0);
+  weeks.forEach((w) => { if (w.delivered > 0) { const xd = X(Math.min(t(w.delivery), Math.max(today, t(w.start)))); pathD += ` H${xd}`; cd += w.delivered; pathD += ` V${Y(cd)}`; lastX = xd; } });
+  const endX = Math.max(lastX, Math.min(X(Math.max(today, x0)), X(x1)));
+  pathD += ` H${endX}`;
+  svg.append(S("path", { d: pathD, fill: "none", stroke: "#c4b5fd", "stroke-width": 3, "stroke-linejoin": "round", filter: "url(#glow)" }));
+  svg.append(S("circle", { cx: endX, cy: Y(cd), r: 5.5, fill: "#ffffff", stroke: "#8f7cff", "stroke-width": 3, filter: "url(#glow)" }));
+  const lab = `${fmt(cd)} delivered`, right = endX + 90 > W - m.r;
+  svg.append(T({ x: right ? endX - 10 : endX + 10, y: Y(cd) - 10, "text-anchor": right ? "end" : "start", "font-size": 12, "font-weight": 600, fill: "#eeebff" }, lab));
+  if (today >= x0 && today <= x1) {
+    const xt = X(today);
+    svg.append(S("line", { x1: xt, x2: xt, y1: m.t, y2: H - m.b, stroke: "#ffc16b", "stroke-width": 1.5, "stroke-dasharray": "3 4" }));
+    svg.append(T({ x: xt, y: H - m.b + 34, "text-anchor": "middle", "font-size": 11, "font-weight": 600, fill: "#ffc16b" }, "Today"));
+  }
+  const tip = mk("div", "tip");
+  pts.forEach((p, i) => {
+    svg.append(S("circle", { cx: p.x, cy: p.y, r: 4, fill: "#141230", stroke: "#8f7cff", "stroke-width": 1.5 }));
+    if (!narrow || i % 2 === 1) svg.append(T({ x: p.x, y: p.y - 11, "text-anchor": "middle", "font-size": 11, fill: "#a39fc6" }, fmt(p.cum)));
+    svg.append(T({ x: p.x, y: H - m.b + 17, "text-anchor": "middle", "font-size": 11, fill: "#d6d2f5" }, narrow ? `W${p.w.batch}` : `${p.w.label} · ${dd(p.w.delivery)}`));
+    const hit = S("rect", { x: p.x - 32, y: m.t, width: 64, height: H - m.t - m.b + 22, fill: "transparent" });
+    hit.addEventListener("pointerenter", () => {
+      tip.textContent = "";
+      tip.append(mk("b", "", `${p.w.label} · due ${dow(p.w.delivery)} ${dd(p.w.delivery)}`));
+      const dc = sample.delivered + weeks.filter((w) => w.batch <= p.w.batch).reduce((a, w) => a + w.delivered, 0);
+      [`This batch: ${fmt(p.w.delivered)} / ${fmt(p.w.planned)} delivered`, `Cumulative planned: ${fmt(p.cum)}`, `Cumulative delivered: ${fmt(dc)}`, `Status: ${p.w.status}`].forEach((s) => tip.append(mk("div", "", s)));
+      const k = chartEl.clientWidth / W;
+      tip.style.left = `${Math.min(Math.max(p.x * k, 115), chartEl.clientWidth - 115)}px`;
+      tip.style.top = `${Math.max(0, p.y * k - 104)}px`;
+      tip.style.opacity = 1;
+    });
+    hit.addEventListener("pointerleave", () => { tip.style.opacity = 0; });
+    svg.append(hit);
+  });
+  chartEl.append(svg, tip);
+}
+drawChart();
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(drawChart, 120); });
+
+// Sidebar active link follows the section in view
+const links = [...document.querySelectorAll(".nav a")];
+const secs = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+const onScroll = () => {
+  let cur = secs[0];
+  secs.forEach((s) => { if (s.getBoundingClientRect().top < 140) cur = s; });
+  links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + cur.id));
+};
+window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+}
+
+// ===== Loader: live Google Sheet first, backup data if it can't be reached =====
+function parseCSV(text) {
+  const out = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; row.push(cell); out.push(row); row = []; cell = ""; }
+    else cell += ch;
+  }
+  if (cell !== "" || row.length) { row.push(cell); out.push(row); }
+  return out.filter((r) => r.some((c) => c.trim() !== ""));
+}
+function toBatches(rows) {
+  const head = rows[0].map((h) => h.trim().toLowerCase());
+  const col = (name) => head.indexOf(name);
+  const need = ["batch", "label", "planned", "delivered", "status"];
+  if (need.some((n) => col(n) < 0)) throw new Error("Missing columns");
+  const iso = (v) => {
+    v = (v || "").trim(); if (!v) return null;
+    if (/^\d{4}-\d{2}-\d{2}/.test(v)) return v.slice(0, 10);
+    const m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); // dd/mm/yyyy
+    if (m) return `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+    const d = new Date(v); return isNaN(d) ? null : new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0, 10);
+  };
+  const g = (r, n) => (col(n) >= 0 ? (r[col(n)] || "").trim() : "");
+  const list = rows.slice(1).filter((r) => g(r, "batch") !== "").map((r) => ({
+    batch: Number(g(r, "batch")), label: g(r, "label"), start: iso(g(r, "start")), end: iso(g(r, "end")), delivery: iso(g(r, "delivery")),
+    planned: Number(g(r, "planned").replace(/,/g, "")) || 0, delivered: Number(g(r, "delivered").replace(/,/g, "")) || 0, status: g(r, "status") || "Not started"
+  }));
+  if (!list.some((b) => b.batch > 0 && b.start && b.delivery)) throw new Error("No weeks");
+  return list;
+}
+(async () => {
+  if (SHEET_CSV_URL) {
+    try {
+      const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 8000);
+      const res = await fetch(SHEET_CSV_URL + (SHEET_CSV_URL.includes("?") ? "&" : "?") + "t=" + Date.now(), { signal: ctl.signal, cache: "no-store" });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error(res.status);
+      render(toBatches(parseCSV(await res.text())), null, true);
+      return;
+    } catch (e) { console.warn("Live sheet unavailable, showing backup data", e); }
+  }
+  render(BATCHES, LAST_UPDATED, false);
+})();
+</script>
+</body>
+</html>
