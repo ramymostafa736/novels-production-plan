@@ -296,7 +296,7 @@ tr.next td { background: rgba(143,124,255,0.10); }
       <section class="card glass" id="needs">
         <div class="head"><h2>Needed from management by 14 Nov</h2></div>
         <ul class="checks">
-          <li><span>Master list of the 30 series and 717 novels with ISBNs</span></li>
+          <li><span>Master list of the 30 series and 797 novels with ISBNs</span></li>
           <li><span>All source files (EPUB + MP3) in one place</span></li>
           <li><span>New covers, or each batch’s covers one week ahead</span></li>
           <li><span>Sign-off on the 5 delivered novels as the final spec</span></li>
@@ -328,7 +328,7 @@ tr.next td { background: rgba(143,124,255,0.10); }
     <section class="orb-card glass">
       <div class="orb"></div>
       <h3>Overall progress <span class="spark">✦</span></h3>
-      <p>Share of all 717 novels delivered to date.</p>
+      <p>Share of all 797 novels delivered to date.</p>
       <div class="ring">
         <svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6b4dff"/></linearGradient></defs><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/><circle id="ring-arc" cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 315"/></svg>
         <div class="c"><div><b id="ring-pct">—</b><span>delivered</span></div></div>
@@ -369,15 +369,15 @@ const SHEET_CSV_URL = "";
 
 /* ===== PROGRESS DATA — update `delivered` and `status` each week, and LAST_UPDATED =====
    status: "Not started" | "In progress" | "Delivered" | "Approved" */
-const LAST_UPDATED = "2026-11-18";
+const LAST_UPDATED = "2026-11-19";
 const BATCHES = [
   { batch: 0, label: "Approved sample", start: null,         end: null,         delivery: null,         planned: 5,   delivered: 5, status: "Approved" },
   { batch: 1, label: "Week 1",          start: "2026-11-15", end: "2026-11-19", delivery: "2026-11-19", planned: 119, delivered: 119, status: "Delivered" },
   { batch: 2, label: "Week 2",          start: "2026-11-22", end: "2026-11-26", delivery: "2026-11-26", planned: 119, delivered: 0, status: "Not started" },
   { batch: 3, label: "Week 3",          start: "2026-11-29", end: "2026-12-03", delivery: "2026-12-03", planned: 119, delivered: 0, status: "Not started" },
-  { batch: 4, label: "Week 4",          start: "2026-12-06", end: "2026-12-10", delivery: "2026-12-10", planned: 119, delivered: 0, status: "Not started" },
-  { batch: 5, label: "Week 5",          start: "2026-12-13", end: "2026-12-17", delivery: "2026-12-17", planned: 118, delivered: 0, status: "Not started" },
-  { batch: 6, label: "Week 6",          start: "2026-12-20", end: "2026-12-24", delivery: "2026-12-24", planned: 118, delivered: 0, status: "Not started" }
+  { batch: 4, label: "Week 4",          start: "2026-12-06", end: "2026-12-10", delivery: "2026-12-10", planned: 145, delivered: 0, status: "Not started" },
+  { batch: 5, label: "Week 5",          start: "2026-12-13", end: "2026-12-17", delivery: "2026-12-17", planned: 145, delivered: 0, status: "Not started" },
+  { batch: 6, label: "Week 6",          start: "2026-12-20", end: "2026-12-24", delivery: "2026-12-24", planned: 145, delivered: 0, status: "Not started" }
 ];
 /* ===== end of data ===== */
 
@@ -500,7 +500,7 @@ document.getElementById("ring-arc").setAttribute("stroke-dasharray", `${pct > 0 
 set("r-total", fmt(total)); set("r-plan", fmt(plannedByToday)); set("r-days", `${daysLeft} of ${workDays.length}`);
 set("r-final", `Final delivery · Thu ${dd(finalIso)}`);
 const fdays = Math.round((t(finalIso) - today) / DAY);
-set("r-final-s", fdays > 0 ? `${plural(fdays, "day")} away · all 717 novels` : fdays === 0 ? "Today" : "Date passed");
+set("r-final-s", fdays > 0 ? `${plural(fdays, "day")} away · all 797 novels` : fdays === 0 ? "Today" : "Date passed");
 // sparkline: cumulative planned (filled) + delivered (line)
 const NS = "http://www.w3.org/2000/svg";
 const S = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
